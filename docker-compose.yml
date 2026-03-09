@@ -1,0 +1,51 @@
+# docker-compose.yml
+# ProjectHub — Local development infrastructure
+# Launches PostgreSQL, MongoDB, and Redis with persistent volumes.
+#
+# Usage:
+#   docker compose up -d        # start all services in the background
+#   docker compose down         # stop all services
+#   docker compose down -v      # stop and remove volumes (resets data)
+
+services:
+  # ── PostgreSQL (relational data: users, projects, tasks) ──────────
+  postgres:
+    image: postgres:18-alpine
+    container_name: projecthub-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: projecthub
+      POSTGRES_PASSWORD: projecthub_secret
+      POSTGRES_DB: projecthub_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # ── MongoDB (document data: activity logs) ────────────────────────
+  mongo:
+    image: mongo:7
+    container_name: projecthub-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: projecthub
+      MONGO_INITDB_ROOT_PASSWORD: projecthub_secret
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+
+  # ── Redis (caching layer) ─────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: projecthub-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+
+volumes:
+  pgdata:
+  mongodata:
+  redisdata:

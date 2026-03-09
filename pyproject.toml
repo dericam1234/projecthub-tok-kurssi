@@ -1,0 +1,24 @@
+[project]
+name = "projecthub"
+version = "0.1.0"
+description = "Multi-database backend data layer (PostgreSQL, MongoDB, Redis)"
+requires-python = ">=3.10"
+dependencies = [
+    # SQL layer (PostgreSQL)
+    "sqlmodel==0.0.37",
+    "psycopg2-binary==2.9.11",
+    "alembic==1.18.4",
+    # NoSQL layer (MongoDB)
+    "beanie==2.0.1",
+    # Caching layer (Redis)
+    "redis==7.2.1",
+    # Configuration
+    "pydantic-settings==2.13.1",
+    "python-dotenv==1.2.1",
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+asyncio_mode = "auto"
