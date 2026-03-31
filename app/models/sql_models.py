@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlmodel import Relationship, SQLModel, Field
 
 
@@ -40,6 +41,16 @@ class Project(SQLModel, table=True):
     )
 
 
+# Harjoitus, viikko 03
+class TaskTagLink(SQLModel, table=True):
+    task_id: int | None = Field(
+        default=None, foreign_key="task.id", primary_key=True
+    )
+    tag_id: int | None = Field(
+        default=None, foreign_key="tag.id", primary_key=True
+    )
+
+
 class Task(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     name: str = Field(min_length=3)
@@ -47,3 +58,19 @@ class Task(SQLModel, table=True):
 
     project_id: int = Field(foreign_key="project.id")
     project: Project = Relationship(back_populates="tasks")
+
+    tags: list["Tag"] = Relationship(
+        back_populates="tasks", 
+        link_model=TaskTagLink)
+
+    # Viikko 4: Lisää tehtäviin deadline ja priority-kentät
+    deadline: datetime | None = Field(default=None)
+    priority: int | None = Field(default=None)
+
+class Tag(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    name: str = Field(min_length=1, max_length=30)
+    
+    tasks: list[Task] = Relationship(
+        back_populates="tags", 
+        link_model=TaskTagLink)

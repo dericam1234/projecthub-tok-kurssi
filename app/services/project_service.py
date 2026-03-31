@@ -1,5 +1,5 @@
 from sqlmodel import Session, select
-from app.models.sql_models import User, Project, Task
+from app.models.sql_models import User, Project, Task, Tag
 
 
 def create_user(session: Session, username: str, email: str) -> User:
@@ -59,4 +59,17 @@ def search_tasks(session: Session, status: str | None = None, keyword: str | Non
 
     statement = statement.limit(10)
 
+    return session.exec(statement).all()
+
+
+# Harjoitus, viikko 03
+def create_tag(session: Session, name: str) -> Tag:
+    tag = Tag(name=name)
+    session.add(tag)
+    session.commit()
+    session.refresh(tag)
+    return tag
+
+def get_tasks_by_tag(session: Session, tag_name: str) -> list[Task]:
+    statement = select(Task).join(Task.tags).where(Tag.name == tag_name)
     return session.exec(statement).all()
