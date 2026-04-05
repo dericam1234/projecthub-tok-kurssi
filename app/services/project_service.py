@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlmodel import Session, select
 from app.models.sql_models import User, Project, Task, Tag
 
@@ -10,8 +11,8 @@ def create_user(session: Session, username: str, email: str) -> User:
     return user
 
 
-def create_project(session: Session, title: str, owner_id: int) -> Project:
-    project = Project(title=title, owner_id=owner_id)
+def create_project(session: Session, title: str, owner_id: int, is_active: bool = True) -> Project:
+    project = Project(title=title, owner_id=owner_id, is_active=is_active)
     session.add(project)
     session.commit()
     session.refresh(project)
@@ -32,8 +33,8 @@ def get_user(session: Session, user_id: int) -> User | None:
     return user
 
 
-def create_task(session: Session, name: str, project_id: int, status: str = "todo") -> Task:
-    task = Task(name=name, project_id=project_id, status=status)
+def create_task(session: Session, name: str, project_id: int, status: str = "todo", priority: int | None = None, deadline: datetime | None = None) -> Task:
+    task = Task(name=name, project_id=project_id, status=status, priority=priority, deadline=deadline)
     session.add(task)
     session.commit()
     session.refresh(task)

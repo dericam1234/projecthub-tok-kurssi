@@ -29,6 +29,8 @@ class Project(SQLModel, table=True):
 
     title: str = Field(min_length=1, max_length=100)
     description: str | None = Field(default=None, max_length=500)
+    # Viikko 4: Lisää projekteihin is_active-kenttä
+    is_active: bool = Field(default=True)
 
     owner_id: int = Field(foreign_key="user.id")
     owner: User = Relationship(back_populates="projects")
