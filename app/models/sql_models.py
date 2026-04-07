@@ -1,4 +1,5 @@
 from datetime import datetime
+from sqlalchemy import text
 from sqlmodel import Relationship, SQLModel, Field
 
 
@@ -30,7 +31,9 @@ class Project(SQLModel, table=True):
     title: str = Field(min_length=1, max_length=100)
     description: str | None = Field(default=None, max_length=500)
     # Viikko 4: Lisää projekteihin is_active-kenttä
-    is_active: bool = Field(default=True)
+    is_active: bool = Field(
+        default=True, sa_column_kwargs={"server_default": text("true")}
+    )
 
     owner_id: int = Field(foreign_key="user.id")
     owner: User = Relationship(back_populates="projects")
